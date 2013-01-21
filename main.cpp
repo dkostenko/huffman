@@ -5,6 +5,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <fstream>
 
 using namespace std;
 
@@ -30,7 +31,7 @@ struct MyCompare
 {
     bool operator()(Node* left, Node* right) const
     {
-        return left->a < right->a;
+        return left->a <= right->a;
     }
 };
 
@@ -43,16 +44,23 @@ void BuildTable(Node *root)
     if(root->left!=NULL)
     {
         code.push_back(0);
+        cout << "IN in left" << endl;
         BuildTable(root->left);
+        cout << "out from left" << endl;
     }
 
     if(root->right!=NULL)
     {
         code.push_back(1);
+        cout << "IN in right" << endl;
         BuildTable(root->right);
+        cout << "out from right" << endl;
     }
 
-    if(root->c) table[root->c] = code;
+    if(root->c)
+    {
+        table[root->c] = code;
+    }
 
     code.pop_back();
 }
@@ -86,21 +94,11 @@ int main()
 
     cout << endl;
 
-    string s = "it is my striiiiiiiiing!!!!";
-
-
-
-    /*for(int i=0; i<s.length(); ++i)
-    {
-        char c = s[i];
-        m[c]++;
-    }*/
+    string s = "dabqw";
 
 
     for(i=m.begin(); i!=m.end(); ++i)
         cout << i->first << ":" << i->second << endl;
-
-
 
 
 
@@ -128,24 +126,33 @@ int main()
         tree.push_back(parent);
     }
 
-    cout << "tree.size()=" << tree.size() << endl;
-
     Node *root = tree.front();
 
+
+    cout << "start build tree" << endl;
     BuildTable(root);
+    cout << "finish build tree" << endl;
 
 
-    cout << "s.length()=" << s.length() << endl;
+
+    ofstream out("output.txt"); // Открываем файл для записи
 
     for(int i=0; i<s.length(); ++i)
     {
-        char c=s[i];
+        c=s[i];
         vector<bool> x = table[c];
 
+        out<<c;
         for(n=0; n<x.size(); ++n)
+        {
             cout << x[n];
+            out<<x[n];
+        }
+        out<<"\n";
+        cout << endl;
     }
-    cout << endl;
+    out.close(); //Закрываем файл
+
 
 
     return 0;
